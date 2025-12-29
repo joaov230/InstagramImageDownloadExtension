@@ -1,12 +1,12 @@
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
   if (request.action === "getHTML") {
 
-    const isPopupPhoto = document.querySelectorAll("._aagu._aato").length > 0;
+    const isCarouselPhoto = document.querySelectorAll("._aagu._aato").length > 0;
 
     let imgURL = null;
-    let isPopup = isPopupPhoto;
+    let isCarousel = isCarouselPhoto;
 
-    if (isPopupPhoto) {
+    if (isCarouselPhoto) {
       const popupImages = document.querySelectorAll("._aagu._aato ._aagv");
 
       imgURL = [];
@@ -18,9 +18,9 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       imgURL = document.querySelectorAll("._aagv")[0].children[0].src;
     }
 
-    // imgURL can be a string or an array of strings, depending on "isPopup" value
-    // isPopup == true, then imgURL is an array
-    // isPopup == false, then imgURL is a string
-    sendResponse({ isPopup: isPopup, imgURL: imgURL });
+    // imgURL can be a string or an array of strings, depending on "isCarousel" value
+    // isCarousel == true, then imgURL is an array
+    // isCarousel == false, then imgURL is a string
+    sendResponse({ isCarousel: isCarousel, imgURL: imgURL });
   }
 });

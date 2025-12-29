@@ -1,14 +1,13 @@
 // service-worker.js
-chrome.action.onClicked.addListener(async (tab) => {
+chrome.action.onClicked.addListener((tab) => {
   chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
     chrome.tabs.sendMessage(tabs[0].id, { action: "getHTML" })
       .then(async (response) => {
         if (response.imgURL) {
-
-          if (response.isPopup) {
+          if (response.isCarousel) {
             await ensureOffscreen();
 
-            response.imgURL.map(async (url, index) => {
+            const images = response.imgURL.map(async (url, index) => {
               const res = await fetch(url);
               const blob = await res.blob();
               return {
@@ -16,6 +15,8 @@ chrome.action.onClicked.addListener(async (tab) => {
                 blob
               };
             });
+
+            console.log(images);
 
             chrome.runtime.sendMessage({
               action: "createZip",
@@ -38,7 +39,7 @@ async function ensureOffscreen() {
   const exists = await chrome.offscreen.hasDocument();
   if (!exists) {
     await chrome.offscreen.createDocument({
-      url: "offscreen.html",
+      url: "./offscreen.html",
       reasons: ["BLOBS"],
       justification: "Zip and download images"
     });
