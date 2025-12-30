@@ -1,8 +1,10 @@
-chrome.runtime.onMessage.addListener(async (msg) => {
-  if (msg.action === "createZip") {
+chrome.runtime.onMessage.addListener(async function (request, sender, sendResponse) {
+  console.log('Offscreen received message:', request);
+
+  if (request.action === "createZip") {
     const zip = new JSZip();
 
-    msg.images.forEach(img => {
+    request.images.forEach(img => {
       zip.file(img.name, img.blob);
     });
 
